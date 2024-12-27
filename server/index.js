@@ -28,7 +28,6 @@ app.get("/", (req, res, next) => {
 });
 
 //global error handler
-
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal server error";
@@ -38,5 +37,5 @@ app.use((err, req, res, next) => {
 // Starts the server and listens for HTTP reqs
 // callback function logs the the server that is listening
 app.listen(PORT, () => {
-  console.log(`listening on port ${{ PORT }}`);
+  console.log(`listening on port ${PORT}`);
 });

@@ -1,4 +1,11 @@
-export async function getAllTodos(req, res, next) {}
+import Todo from "../models/todoModel.js";
+import { connectToDB } from "../utils/connect.js";
+
+export async function getAllTodos(req, res, next) {
+  await connectToDB(); // connect to data base
+  const todos = await Todo.find({ userID: req.user.id });
+  res.status(200).send(todos);
+}
 
 export async function getTodo(req, res, next) {}
 
