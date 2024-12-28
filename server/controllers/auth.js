@@ -1,7 +1,7 @@
 import { createError } from "../utils/error.js";
 import { connectToDB } from "../utils/connect.js";
 import User from "../models/userModel.js";
-import bcrypt from "bcryptjs"; // Correct import
+import bcrypt from "bcryptjs"; // library to help you hash passwords
 import jwt from "jsonwebtoken";
 
 export async function register(req, res, next) {
