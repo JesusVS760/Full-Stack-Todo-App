@@ -14,7 +14,7 @@ const app = express();
 // PORT which the server will listen for incoming HTTP reqs
 const PORT = 3000;
 
-dotenv.config();
+dotenv.config(); // loads my environment variables to this file so I can add to it
 
 const corsOption = {
   origin: "http://localhost:5173",

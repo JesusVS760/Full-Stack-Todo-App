@@ -9,12 +9,12 @@ export const Register = () => {
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [state, formAction, isPending] = useActionState(register, {
-    sucess: null,
+    success: null,
     error: null,
   });
 
   useEffect(() => {
-    if (state.sucess) {
+    if (state.success) {
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -51,6 +51,12 @@ export const Register = () => {
             onChange={handleChange}
           />
         </div>
+        {state.success && (
+          <span className="message successMsg">
+            {state.success} {"Redirecting..."}
+          </span>
+        )}
+        {state.error && <span className="message">{state.error}</span>}
         <Button disabled={isPending}>
           {isPending ? "Registering" : "Register"}
         </Button>
