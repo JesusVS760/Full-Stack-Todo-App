@@ -61,10 +61,20 @@ export async function deleteTodo(req, res, next) {
 }
 
 export async function addTodo(req, res, next) {
+  // console.log(req.body);
+  // if (!req.body || !req.body.title) {
+  //   return next(createError(404, "Title is required!"));
+  // }
+  // await connectToDB();
+  // const newTodo = new Todo({ title: req.body.title, userID: req.user.id });
+  // await newTodo.save();
+  // res.status(201).json(newTodo);
+
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log(req.body);
-  if (!req.body || !req.body.title) {
+
+  if (!req.body || !req.body.title)
     return next(createError(404, "Title is required!"));
-  }
   await connectToDB();
   const newTodo = new Todo({ title: req.body.title, userID: req.user.id });
   await newTodo.save();

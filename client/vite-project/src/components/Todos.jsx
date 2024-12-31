@@ -18,12 +18,10 @@ const fetcher = (url, options = {}) => {
 };
 
 export const Todos = () => {
-  const {
-    data = [],
-    error,
-    mutate,
-    isLoading,
-  } = useSWR("http://localhost:3000/api/todos", fetcher);
+  const { data, error, mutate, isLoading } = useSWR(
+    "http://localhost:3000/api/todos",
+    fetcher
+  );
   if (error) {
     return <h1 className="text-2xl py-2 text-center">Something went wrong!</h1>;
   }
@@ -95,6 +93,26 @@ export const Todos = () => {
     // e.target.reset(); // Reset the form after adding the todo
   }
 
+  async function deleteTodo(id) {
+    toast.success("Todo deleted");
+    await mutate(
+      async () => {
+        const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
+          method: "DELETE",
+        });
+        if (response.error) {
+          handleError(response.error);
+        }
+        return data.filter((todo) => todo._id !== id);
+      },
+      {
+        optimisticData: data.filter((todo) => todo._id !== id),
+        rollbackOnError: true,
+        revalidate: false,
+      }
+    );
+  }
+
   return (
     <div className="mx-auto mt-20 max-w-lg px-4 w-full flex flex-col gap-6">
       <div>
@@ -136,9 +154,16 @@ export const Todos = () => {
                 {todo.title}
               </span>
               <div className="px-3 flex gap-2">
-                <TickIcon />
-                <DeleteIcon />
-                <EditIcon />
+                <TickIcon
+                  className={`transition ease-in-out hover:cursor-pointer ${
+                    todo.isCompleted ? "text-primary" : "text-slate-300"
+                  }`}
+                />
+                <DeleteIcon
+                  className="iconHover"
+                  onClick={() => deleteTodo(todo._id)}
+                />
+                <EditIcon className="iconHover" />
               </div>
             </div>
           ))}
