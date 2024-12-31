@@ -1,8 +1,9 @@
 // DeleteIcon.jsx
 import React from "react";
 
-const DeleteIcon = ({ className }) => (
+const DeleteIcon = ({ className, onClick }) => (
   <svg
+    onClick={onClick}
     className={className}
     xmlns="http://www.w3.org/2000/svg"
     width="24"
