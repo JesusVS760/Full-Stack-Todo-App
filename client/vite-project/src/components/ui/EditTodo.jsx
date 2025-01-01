@@ -31,13 +31,7 @@ const EditTodo = ({ title, id, handleUpdate }) => {
             Make changes to your todo here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleUpdate(new FormData(e.target)); // Ensure you pass FormData to handleUpdate
-          }}
-          className="flex flex-col gap-2"
-        >
+        <form action={handleUpdate} className="flex flex-col gap-2">
           <Input type="hidden" value={id} name="id" />
           <Label htmlFor="title">Previous Todo</Label>
           <Input
@@ -47,9 +41,9 @@ const EditTodo = ({ title, id, handleUpdate }) => {
             onChange={(e) => setUpdateTitle(e.target.value)}
             className="col-span-3"
           />
-          <DialogFooter>
-            <Button type="submit">Save Changes</Button>
-          </DialogFooter>
+          <DialogTrigger asChild>
+            <Button>Save Changes</Button>
+          </DialogTrigger>
         </form>
       </DialogContent>
     </Dialog>
