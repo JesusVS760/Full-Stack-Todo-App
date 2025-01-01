@@ -8,6 +8,8 @@ export async function getAllTodos(req, res, next) {
   res.status(200).send(todos);
 }
 
+// trycatch used for thrown errors from connectToDB and other async code (can also be sync)
+// next() used for validation failures; logical checks that may result in a worst case sincero
 export async function getTodo(req, res, next) {
   try {
     await connectToDB();

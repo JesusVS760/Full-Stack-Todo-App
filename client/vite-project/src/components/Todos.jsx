@@ -1,11 +1,11 @@
 import React from "react";
 import toast from "react-hot-toast";
 import DeleteIcon from "../icons/DeleteIcon";
-import EditIcon from "../icons/EditIcon";
 import TickIcon from "../icons/TickIcon";
 import useSWR from "swr";
 import { CircleUserRound, Plus } from "lucide-react";
 import { Input } from "./ui/input";
+import EditTodo from "./ui/EditTodo";
 
 const fetcher = (url, options = {}) => {
   return fetch(url, {
@@ -97,9 +97,12 @@ export const Todos = () => {
     toast.success("Todo deleted");
     await mutate(
       async () => {
-        const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetcher(
+          `http://localhost:3000/api/todos/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
         if (response.error) {
           handleError(response.error);
         }
@@ -111,6 +114,42 @@ export const Todos = () => {
         revalidate: false,
       }
     );
+  }
+
+  async function handleComplete(id, isCompleted) {
+    await mutate(async () => {
+      const response = await fetcher(`http://localhost:3000/api/todos/${id}`, {
+        method: "PUT",
+        body: { isCompleted: !isCompleted },
+      });
+      if (response.error) {
+        handleError(response.error);
+      }
+      return (
+        data.map((todo) => {
+          if (todo._id == id) {
+            return { ...todo, isCompleted: !isCompleted };
+          }
+          return todo;
+        }),
+        {
+          optimisticData: data.map((todo) => {
+            if (todo._id == id) {
+              return { ...todo, isCompleted: !isCompleted };
+            }
+            return todo;
+          }),
+          rollbackOnError: true,
+          revalidate: false,
+        }
+      );
+    });
+  }
+
+  async function handleUpdate(formData) {
+    const title = formData.get("title");
+    const id = formData.get("id");
+    console.log({ title, id });
   }
 
   return (
@@ -155,6 +194,7 @@ export const Todos = () => {
               </span>
               <div className="px-3 flex gap-2">
                 <TickIcon
+                  onClick={() => handleComplete(todo._id, todo.isCompleted)}
                   className={`transition ease-in-out hover:cursor-pointer ${
                     todo.isCompleted ? "text-primary" : "text-slate-300"
                   }`}
@@ -163,7 +203,11 @@ export const Todos = () => {
                   className="iconHover"
                   onClick={() => deleteTodo(todo._id)}
                 />
-                <EditIcon className="iconHover" />
+                <EditTodo
+                  HandleUpdate={handleUpdate}
+                  id={todo._id}
+                  title={todo.title}
+                />
               </div>
             </div>
           ))}
